@@ -17,7 +17,7 @@ package org.fedoraproject.maven.dependency;
 
 import java.util.Set;
 
-import org.eclipse.aether.artifact.Artifact;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Mikolaj Izdebski

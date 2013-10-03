@@ -48,12 +48,6 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.sisu.space.asm.ClassReader;
-import org.eclipse.sisu.space.asm.ClassVisitor;
-import org.eclipse.sisu.space.asm.MethodVisitor;
-import org.eclipse.sisu.space.asm.Opcodes;
 import org.fedoraproject.maven.config.Configuration;
 import org.fedoraproject.maven.config.Configurator;
 import org.fedoraproject.maven.config.InstallerSettings;
@@ -75,6 +69,12 @@ import org.fedoraproject.maven.resolver.ResolutionResult;
 import org.fedoraproject.maven.resolver.Resolver;
 import org.fedoraproject.maven.utils.ArtifactUtils;
 import org.fedoraproject.maven.utils.LoggingUtils;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.EmptyVisitor;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * <strong>WARNING</strong>: This class is part of internal implementation of XMvn and it is marked as public only for
@@ -517,7 +517,7 @@ public class DefaultInstaller
 
                 final boolean[] usesNativeCode = new boolean[1];
 
-                new ClassReader( jis ).accept( new ClassVisitor( Opcodes.ASM4 )
+                new ClassReader( jis ).accept( new EmptyVisitor()
                 {
                     @Override
                     public MethodVisitor visitMethod( int flags, String name, String desc, String sig, String[] exc )

@@ -18,9 +18,9 @@ package org.fedoraproject.maven.repository.impl;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.repository.Repository;
 import org.fedoraproject.maven.repository.RepositoryPath;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Mikolaj Izdebski

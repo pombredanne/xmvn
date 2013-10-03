@@ -15,7 +15,7 @@
  */
 package org.fedoraproject.maven.resolver;
 
-import org.eclipse.aether.artifact.Artifact;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * A container structure holding artifacts.

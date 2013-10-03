@@ -17,7 +17,7 @@ package org.fedoraproject.maven.resolver;
 
 import java.io.File;
 
-import org.eclipse.aether.artifact.Artifact;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * Resolves artifacts from system repositories configured in {@code <resolverSettings>} in XMvn configuration.

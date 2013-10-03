@@ -21,8 +21,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * @author Mikolaj Izdebski

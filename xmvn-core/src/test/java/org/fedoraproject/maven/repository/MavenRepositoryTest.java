@@ -18,12 +18,12 @@ package org.fedoraproject.maven.repository;
 import java.nio.file.Paths;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.config.Configuration;
 import org.fedoraproject.maven.config.Configurator;
 import org.fedoraproject.maven.config.Repository;
 import org.fedoraproject.maven.config.RepositoryConfigurator;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * @author Mikolaj Izdebski

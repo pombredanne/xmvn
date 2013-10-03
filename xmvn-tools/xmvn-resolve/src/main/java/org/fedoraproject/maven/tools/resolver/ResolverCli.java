@@ -25,11 +25,11 @@ import java.util.TreeMap;
 
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.logging.Logger;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.resolver.ResolutionRequest;
 import org.fedoraproject.maven.resolver.Resolver;
 import org.fedoraproject.maven.utils.LoggingUtils;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 import com.beust.jcommander.DynamicParameter;
 import com.beust.jcommander.JCommander;

@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.Stereotype;
 import org.fedoraproject.maven.repository.RepositoryPath;
 import org.fedoraproject.maven.utils.ArtifactUtils;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Mikolaj Izdebski

@@ -23,10 +23,10 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.codehaus.plexus.PlexusTestCase;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.config.Configurator;
 import org.fedoraproject.maven.config.ResolverSettings;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * @author Mikolaj Izdebski

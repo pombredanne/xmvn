@@ -27,11 +27,11 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.RepositoryConfigurator;
 import org.fedoraproject.maven.config.Stereotype;
 import org.fedoraproject.maven.repository.Repository;
 import org.fedoraproject.maven.repository.RepositoryPath;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * Compound repository.

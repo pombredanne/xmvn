@@ -25,8 +25,8 @@ import java.util.Properties;
 
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.Stereotype;
+import org.sonatype.aether.artifact.Artifact;
 
 @Component( role = Repository.class, hint = "my-type" )
 public class MyRepository

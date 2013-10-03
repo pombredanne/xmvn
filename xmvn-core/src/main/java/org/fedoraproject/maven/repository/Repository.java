@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Properties;
 
 import org.codehaus.plexus.util.xml.Xpp3Dom;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.Stereotype;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * Repository of artifacts.

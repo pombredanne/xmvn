@@ -36,8 +36,12 @@
   </description>
   <dependencies>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
+      <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-util</artifactId>
     </dependency>
   </dependencies>
 </project>

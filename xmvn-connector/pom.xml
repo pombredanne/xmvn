@@ -56,7 +56,7 @@
       <artifactId>maven-artifact</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
+      <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-api</artifactId>
     </dependency>
     <dependency>
@@ -72,8 +72,8 @@
       <artifactId>xmvn-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-inject-plexus</artifactId>
     </dependency>
   </dependencies>
 </project>

@@ -25,10 +25,10 @@ import org.apache.maven.model.Extension;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.StringUtils;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.model.AbstractModelVisitor;
 import org.fedoraproject.maven.utils.ArtifactUtils;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * @author Mikolaj Izdebski

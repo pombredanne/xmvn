@@ -36,12 +36,12 @@ import java.util.zip.ZipInputStream;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.logging.Logger;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.resolver.ResolutionRequest;
 import org.fedoraproject.maven.resolver.Resolver;
 import org.fedoraproject.maven.utils.ArtifactUtils;
 import org.fedoraproject.maven.utils.FileUtils;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 @Component( role = ArtifactVisitor.class )
 public class ArtifactVisitor

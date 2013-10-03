@@ -68,12 +68,16 @@
       <artifactId>plexus-component-annotations</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
+      <groupId>org.sonatype.sisu</groupId>
+      <artifactId>sisu-inject-plexus</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.aether</groupId>
+      <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-util</artifactId>
     </dependency>
   </dependencies>
   <build>

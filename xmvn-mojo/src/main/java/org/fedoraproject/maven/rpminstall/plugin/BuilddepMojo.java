@@ -34,7 +34,6 @@ import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
 import org.codehaus.plexus.util.xml.pull.MXSerializer;
 import org.codehaus.plexus.util.xml.pull.XmlSerializer;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.Configurator;
 import org.fedoraproject.maven.dependency.DependencyExtractionRequest;
 import org.fedoraproject.maven.dependency.DependencyExtractionResult;
@@ -44,6 +43,7 @@ import org.fedoraproject.maven.resolver.ResolutionRequest;
 import org.fedoraproject.maven.resolver.ResolutionResult;
 import org.fedoraproject.maven.resolver.Resolver;
 import org.fedoraproject.maven.utils.ArtifactUtils;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Mikolaj Izdebski

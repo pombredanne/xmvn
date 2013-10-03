@@ -26,12 +26,12 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.codehaus.plexus.logging.Logger;
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
 import org.fedoraproject.maven.config.InstallerSettings;
 import org.fedoraproject.maven.config.PackagingRule;
 import org.fedoraproject.maven.utils.ArtifactUtils;
 import org.fedoraproject.maven.utils.FileUtils;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.util.artifact.DefaultArtifact;
 
 /**
  * @author Mikolaj Izdebski

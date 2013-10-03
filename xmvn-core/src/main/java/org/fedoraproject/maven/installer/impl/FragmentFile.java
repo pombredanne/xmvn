@@ -28,9 +28,9 @@ import java.util.Set;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.xml.pull.MXSerializer;
 import org.codehaus.plexus.util.xml.pull.XmlSerializer;
-import org.eclipse.aether.artifact.Artifact;
 import org.fedoraproject.maven.config.InstallerSettings;
 import org.fedoraproject.maven.utils.ArtifactUtils;
+import org.sonatype.aether.artifact.Artifact;
 
 /**
  * @author Mikolaj Izdebski
