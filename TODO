@@ -8,10 +8,27 @@ submit a RFE at Red Hat Bugzilla (product Fedora, component xmvn):
 http://bugzilla.redhat.com/enter_bug.cgi?product=fedora&component=xmvn
 
 
+* User-visible features
+
+** Use cache manager instead of storing stuff in /tmp
+
+* Internal features
+
+** Test cases for Ivy support
+
+** Test cases for XMvn Bisect
+
+** Regression tests for fixed bugs
+
+   Bugs in Bugzilla marked with NeedsTestCase keyword.
+
+** Reduce usage of RuntimeExceptions
+
+   Use checked exceptions in favor of unchecked RuntimeException.
+
 * Random ideas (no milestone assigned)
 
 ** plugin API
-
 
 * Deferred features
 

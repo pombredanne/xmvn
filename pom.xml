@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!--
- ! Copyright (c) 2012-2013 Red Hat, Inc.
+ ! Copyright (c) 2012-2015 Red Hat, Inc.
  !
  ! Licensed under the Apache License, Version 2.0 (the "License");
  ! you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
   <parent>
     <artifactId>xmvn-parent</artifactId>
     <groupId>org.fedoraproject.xmvn</groupId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>2.6.0-SNAPSHOT</version>
     <relativePath>xmvn-parent</relativePath>
   </parent>
   <artifactId>xmvn</artifactId>
@@ -36,12 +36,22 @@
   </description>
   <modules>
     <module>xmvn-parent</module>
+    <module>xmvn-api</module>
+    <module>xmvn-launcher</module>
     <module>xmvn-core</module>
-    <module>xmvn-connector</module>
+    <module>xmvn-connector-aether</module>
+    <module>xmvn-connector-gradle</module>
+    <module>xmvn-connector-ivy</module>
     <module>xmvn-mojo</module>
     <module>xmvn-tools</module>
+    <module>xmvn-it</module>
   </modules>
   <dependencies>
+    <dependency>
+      <groupId>org.fedoraproject.xmvn</groupId>
+      <artifactId>xmvn-api</artifactId>
+      <scope>runtime</scope>
+    </dependency>
     <dependency>
       <groupId>org.fedoraproject.xmvn</groupId>
       <artifactId>xmvn-core</artifactId>
@@ -49,7 +59,7 @@
     </dependency>
     <dependency>
       <groupId>org.fedoraproject.xmvn</groupId>
-      <artifactId>xmvn-connector</artifactId>
+      <artifactId>xmvn-connector-aether</artifactId>
       <scope>runtime</scope>
     </dependency>
   </dependencies>
@@ -114,10 +124,28 @@
                   <groupId>${project.groupId}</groupId>
                   <artifactId>xmvn-core</artifactId>
                   <version>${project.version}</version>
+                  <type>xdoc</type>
+                  <classifier>metadata</classifier>
+                  <outputDirectory>${project.build.directory}/generated-site/xdoc</outputDirectory>
+                  <destFileName>metadata.xml</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>xmvn-core</artifactId>
+                  <version>${project.version}</version>
                   <type>xsd</type>
                   <classifier>config</classifier>
-                  <outputDirectory>${project.build.directory}/generated-site/xsd</outputDirectory>
-                  <destFileName>config-0.5.0.xsd</destFileName>
+                  <outputDirectory>${project.build.directory}/generated-site/resources/xsd</outputDirectory>
+                  <destFileName>config-2.0.0.xsd</destFileName>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>xmvn-core</artifactId>
+                  <version>${project.version}</version>
+                  <type>xsd</type>
+                  <classifier>metadata</classifier>
+                  <outputDirectory>${project.build.directory}/generated-site/resources/xsd</outputDirectory>
+                  <destFileName>metadata-2.0.0.xsd</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -140,26 +168,6 @@
                 <descriptor>src/main/assembly/bin.xml</descriptor>
               </descriptors>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-invoker-plugin</artifactId>
-        <configuration>
-          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-          <settingsFile>src/it/settings.xml</settingsFile>
-          <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-          <postBuildHookScript>verify</postBuildHookScript>
-          <mavenHome>${project.build.directory}/dependency/${project.artifactId}-${project.version}</mavenHome>
-          <mavenExecutable>xmvn</mavenExecutable>
-        </configuration>
-        <executions>
-          <execution>
-            <id>integration-test</id>
-            <goals>
-              <goal>install</goal>
-              <goal>run</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>

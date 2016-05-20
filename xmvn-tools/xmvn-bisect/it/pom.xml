@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!--
- ! Copyright (c) 2013 Red Hat, Inc.
+ ! Copyright (c) 2013-2015 Red Hat, Inc.
  !
  ! Licensed under the Apache License, Version 2.0 (the "License");
  ! you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.fedoraproject.maven.tests</groupId>
+  <groupId>org.fedoraproject.xmvn.tests</groupId>
   <artifactId>xmvn-bisect-it</artifactId>
   <version>1.0.0</version>
   <dependencies>

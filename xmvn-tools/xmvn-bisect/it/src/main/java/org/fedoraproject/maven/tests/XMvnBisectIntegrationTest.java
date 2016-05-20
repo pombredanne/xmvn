@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2013 Red Hat, Inc.
+ * Copyright (c) 2013-2015 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.fedoraproject.maven.tests;
+package org.fedoraproject.xmvn.tests; import org.junit.After;import org.junit.Before;import org.junit.Test;import static org.junit.Assert.*;
 
 import org.codehaus.plexus.util.interpolation.Interpolator;
 
 /**
  * @author Mikolaj Izdebski
  */
-class XMvnBisectIntegrationTest
+public class XMvnBisectIntegrationTest
 {
     Interpolator interpolator;
 }

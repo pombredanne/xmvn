@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!--
- ! Copyright (c) 2013 Red Hat, Inc.
+ ! Copyright (c) 2013-2015 Red Hat, Inc.
  !
  ! Licensed under the Apache License, Version 2.0 (the "License");
  ! you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@
     <fileSet>
       <includes>
         <include>AUTHORS</include>
-        <include>README</include>
+        <include>README.md</include>
         <include>LICENSE</include>
         <include>NOTICE</include>
       </includes>
@@ -48,6 +48,28 @@
         <include>conf/logging/simplelogger.properties</include>
         <include>NOTICE.txt</include>
         <include>**/*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>xmvn-core/target/dependency</directory>
+      <outputDirectory>lib/core</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>xmvn-core/target</directory>
+      <outputDirectory>lib/core</outputDirectory>
+      <includes>
+        <include>*.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>xmvn-connector-ivy/target/dependency</directory>
+      <outputDirectory>lib/ivy</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>xmvn-connector-ivy/target</directory>
+      <outputDirectory>lib/ivy</outputDirectory>
+      <includes>
+        <include>*.jar</include>
       </includes>
     </fileSet>
     <fileSet>
