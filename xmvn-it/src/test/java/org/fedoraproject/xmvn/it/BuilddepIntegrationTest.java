@@ -1,5 +1,5 @@
 /*-
- * Copyright (c) 2015 Red Hat, Inc.
+ * Copyright (c) 2015-2016 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,20 @@
  */
 package org.fedoraproject.xmvn.it;
 
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-import static org.custommonkey.xmlunit.XMLUnit.setIgnoreWhitespace;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.easymock.EasyMock;
+import org.fedoraproject.xmvn.utils.DomUtils;
 import org.junit.Test;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * @author Mikolaj Izdebski
@@ -32,62 +36,134 @@ import org.junit.Test;
 public class BuilddepIntegrationTest
     extends AbstractIntegrationTest
 {
-    private void assertBuilddepEqual( String... expected )
+    public static interface Visitor
+    {
+        void visit( String groupId, String artifactId, String version );
+    }
+
+    private Visitor visitor = EasyMock.createMock( Visitor.class );
+
+    public void expectBuildDependency( String groupId, String artifactId )
+    {
+        expectBulidDependency( groupId, artifactId, null );
+    }
+
+    public void expectBulidDependency( String groupId, String artifactId, String version )
+    {
+        visitor.visit( groupId, artifactId, version );
+        EasyMock.expectLastCall();
+    }
+
+    private void verifyBuilddepXml()
         throws Exception
     {
-        setIgnoreWhitespace( true );
         Path builddepPath = Paths.get( ".xmvn-builddep" );
         assertTrue( Files.isRegularFile( builddepPath ) );
 
-        StringBuilder sb = new StringBuilder();
-        for ( String s : expected )
-            sb.append( s );
-        assertXMLEqual( new StringReader( sb.toString() ), Files.newBufferedReader( builddepPath ) );
+        for ( Element dep : DomUtils.parseAsParent( DomUtils.parse( builddepPath ) ) )
+        {
+            assertEquals( "dependency", dep.getNodeName() );
+            Map<String, String> children =
+                DomUtils.parseAsParent( dep ).stream() //
+                        .collect( Collectors.toMap( Node::getNodeName, DomUtils::parseAsText ) );
+            visitor.visit( children.get( "groupId" ), children.get( "artifactId" ), children.get( "version" ) );
+        }
+    }
+
+    public void performBuilddepTest()
+        throws Exception
+    {
+        performTest( "verify", "org.fedoraproject.xmvn:xmvn-mojo:2.6.0-SNAPSHOT:builddep" );
+
+        EasyMock.replay( visitor );
+        verifyBuilddepXml();
+        EasyMock.verify( visitor );
     }
 
     @Test
     public void testBuilddepExpandVariables()
         throws Exception
     {
-        performTest( "verify", "org.fedoraproject.xmvn:xmvn-mojo:2.6.0-SNAPSHOT:builddep" );
-
-        assertBuilddepEqual( "<dependencies>", //
-                             "  <dependency>", //
-                             "    <groupId>junit</groupId>", //
-                             "    <artifactId>junit</artifactId>", //
-                             "  </dependency>", //
-                             "</dependencies>" );
+        expectBuildDependency( "junit", "junit" );
+        performBuilddepTest();
     }
 
     @Test
     public void testBuilddepReactorDependencies()
         throws Exception
     {
-        performTest( "verify", "org.fedoraproject.xmvn:xmvn-mojo:2.6.0-SNAPSHOT:builddep" );
-
-        assertBuilddepEqual( "<dependencies/>" );
+        performBuilddepTest();
     }
 
     @Test
     public void testBuilddepSkippedTestDependencies()
         throws Exception
     {
-        performTest( "verify", "org.fedoraproject.xmvn:xmvn-mojo:2.6.0-SNAPSHOT:builddep" );
-
-        assertBuilddepEqual( "<dependencies>", //
-                             "  <dependency>", //
-                             "    <groupId>xpp3</groupId>", //
-                             "    <artifactId>xpp3</artifactId>", //
-                             "  </dependency>", //
-                             "</dependencies>" );
+        expectBuildDependency( "xpp3", "xpp3" );
+        performBuilddepTest();
     }
 
     @Test
     public void testBuilddepUnusedPlugins()
         throws Exception
     {
-        performTest( "verify", "org.fedoraproject.xmvn:xmvn-mojo:2.6.0-SNAPSHOT:builddep" );
+        performBuilddepTest();
+    }
 
-        assertBuilddepEqual( "<dependencies/>" );
+    @Test
+    public void testBuilddepMavenPluginPlugin()
+        throws Exception
+    {
+        expectBuildDependency( "org.apache.maven.plugins", "maven-plugin-plugin" );
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepMavenPluginPluginManaged()
+        throws Exception
+    {
+        expectBuildDependency( "org.apache.maven.plugins", "maven-plugin-plugin" );
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepSubmodule()
+        throws Exception
+    {
+        expectBuildDependency( "org.codehaus.plexus", "plexus-component-metadata" );
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepSubmoduleInheritance()
+        throws Exception
+    {
+        expectBuildDependency( "org.codehaus.plexus", "plexus-component-metadata" );
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepExternalInheritance()
+        throws Exception
+    {
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepProfiles()
+        throws Exception
+    {
+        expectBuildDependency( "junit", "junit" );
+        expectBuildDependency( "org.codehaus.plexus", "plexus-component-metadata" );
+        performBuilddepTest();
+    }
+
+    @Test
+    public void testBuilddepProfileActivation()
+        throws Exception
+    {
+        expectBuildDependency( "junit", "junit" );
+        expectBuildDependency( "org.codehaus.plexus", "plexus-component-metadata" );
+        performBuilddepTest();
     }
 }

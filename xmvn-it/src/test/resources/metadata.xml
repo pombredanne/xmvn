@@ -16,5 +16,26 @@
       <path>@@@/../../src/test/resources/empty.jar</path>
       <uuid>dfd47753-4a98-4197-bb9b-f89718d8496b</uuid>
     </artifact>
+    <artifact>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>SYSTEM</version>
+      <path>@@@/../dependency/maven-jar-plugin-2.4.jar</path>
+      <uuid>b625beec-f3a2-4161-91ce-45f788ef2664</uuid>
+    </artifact>
+    <artifact>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-plugin-plugin</artifactId>
+      <version>SYSTEM</version>
+      <path>@@@/../dependency/maven-plugin-plugin-3.2.jar</path>
+      <uuid>12c74360-c58a-4a89-86ff-1e1e39caca5d</uuid>
+    </artifact>
+    <artifact>
+      <groupId>org.codehaus.plexus</groupId>
+      <artifactId>plexus-component-metadata</artifactId>
+      <version>SYSTEM</version>
+      <path>@@@/../dependency/plexus-component-metadata-1.6.jar</path>
+      <uuid>4fdcec13-40df-428f-a921-089b1177763b</uuid>
+    </artifact>
   </artifacts>
 </metadata>

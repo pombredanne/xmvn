@@ -15,13 +15,13 @@
  */
 package org.fedoraproject.xmvn.tools.install.condition;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import org.codehaus.plexus.util.StringUtils;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.fedoraproject.xmvn.repository.ArtifactContext;
+import org.fedoraproject.xmvn.utils.DomUtils;
+import org.w3c.dom.Element;
 
 /**
  * @author Mikolaj Izdebski
@@ -30,152 +30,99 @@ public class Condition
 {
     private final BooleanExpression expr;
 
-    private void requireText( Xpp3Dom dom, boolean require )
+    private StringExpression parseString( Element dom )
     {
-        String name = dom.getName();
-
-        if ( require && ( dom.getChildCount() != 0 || dom.getValue() == null ) )
-            throw new RuntimeException( "XML node " + name + " must have text content." );
-
-        if ( !require && StringUtils.isNotEmpty( dom.getValue() ) )
-            throw new RuntimeException( "XML node " + name + " doesn't allow text content." );
-    }
-
-    private void requireChildreen( Xpp3Dom dom, int n )
-    {
-        if ( dom.getChildCount() == n )
-            return;
-
-        String name = dom.getName();
-
-        if ( n == 0 )
-            throw new RuntimeException( "XML node " + name + " doesn't allow any children." );
-
-        if ( n == 1 )
-            throw new RuntimeException( "XML node " + name + " requires exactly one child node." );
-
-        throw new RuntimeException( "XML node " + name + " must have exactly " + n + " children." );
-    }
-
-    private StringExpression parseString( Xpp3Dom dom )
-    {
-        switch ( dom.getName() )
+        switch ( dom.getNodeName() )
         {
             case "groupId":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new GroupId();
 
             case "artifactId":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new ArtifactId();
 
             case "extension":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new Extension();
 
             case "classifier":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new Classifier();
 
             case "version":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new Version();
 
             case "string":
-                requireText( dom, true );
-                requireChildreen( dom, 0 );
-                return new StringLiteral( dom.getValue() );
+                return new StringLiteral( DomUtils.parseAsText( dom ) );
 
             case "property":
-                requireText( dom, true );
-                requireChildreen( dom, 0 );
-                return new Property( dom.getValue() );
+                return new Property( DomUtils.parseAsText( dom ) );
 
             case "null":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new Null();
 
             default:
                 throw new RuntimeException( "Unable to parse string expression: unknown XML node name: "
-                    + dom.getName() );
+                    + dom.getNodeName() );
         }
     }
 
-    private BooleanExpression parseBoolean( Xpp3Dom dom )
+    private BooleanExpression parseBoolean( Element dom )
     {
-        switch ( dom.getName() )
+        switch ( dom.getNodeName() )
         {
             case "true":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new BooleanLiteral( true );
 
             case "false":
-                requireText( dom, false );
-                requireChildreen( dom, 0 );
+                DomUtils.parseAsEmpty( dom );
                 return new BooleanLiteral( true );
 
             case "not":
-                requireText( dom, false );
-                requireChildreen( dom, 1 );
-                return new Not( parseBoolean( dom.getChild( 0 ) ) );
+                return new Not( parseBoolean( DomUtils.parseAsWrapper( dom ) ) );
 
             case "and":
-                requireText( dom, false );
-                return new And( parseBooleans( dom.getChildren() ) );
+                return new And( parseList( dom, this::parseBoolean ) );
 
             case "or":
-                requireText( dom, false );
-                return new Or( parseBooleans( dom.getChildren() ) );
+                return new Or( parseList( dom, this::parseBoolean ) );
 
             case "xor":
-                requireText( dom, false );
-                return new Xor( parseBooleans( dom.getChildren() ) );
+                return new Xor( parseList( dom, this::parseBoolean ) );
 
             case "equals":
-                requireText( dom, false );
-                requireChildreen( dom, 2 );
-                return new Equals( parseString( dom.getChild( 0 ) ), parseString( dom.getChild( 1 ) ) );
+                return new Equals( parseList( dom, this::parseString ) );
 
             case "defined":
-                requireText( dom, true );
-                requireChildreen( dom, 0 );
-                return new Defined( dom.getValue() );
+                return new Defined( DomUtils.parseAsText( dom ) );
 
             default:
                 throw new RuntimeException( "Unable to parse string expression: unknown XML node name: "
-                    + dom.getName() );
+                    + dom.getNodeName() );
         }
     }
 
-    private List<BooleanExpression> parseBooleans( Xpp3Dom[] doms )
+    private static <T> List<T> parseList( Element dom, Function<Element, T> parser )
     {
-        List<BooleanExpression> result = new ArrayList<>();
-
-        for ( Xpp3Dom dom : doms )
-        {
-            result.add( parseBoolean( dom ) );
-        }
-
-        return result;
+        return DomUtils.parseAsParent( dom ).stream() //
+                       .map( child -> parser.apply( child ) ) //
+                       .collect( Collectors.toList() );
     }
 
-    public Condition( Xpp3Dom dom )
+    public Condition( Element dom )
     {
         if ( dom == null )
         {
-            dom = new Xpp3Dom( "condition" );
-            dom.addChild( new Xpp3Dom( "true" ) );
+            this.expr = new BooleanLiteral( true );
         }
-
-        requireChildreen( dom, 1 );
-        this.expr = parseBoolean( dom.getChild( 0 ) );
+        else
+        {
+            this.expr = parseBoolean( DomUtils.parseAsWrapper( dom ) );
+        }
     }
 
     public boolean getValue( ArtifactContext context )

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Extension;
@@ -27,7 +28,6 @@ import org.apache.maven.model.InputLocation;
 import org.apache.maven.model.Parent;
 import org.apache.maven.model.Plugin;
 import org.codehaus.plexus.util.StringUtils;
-
 import org.fedoraproject.xmvn.artifact.Artifact;
 import org.fedoraproject.xmvn.artifact.DefaultArtifact;
 import org.fedoraproject.xmvn.model.AbstractModelVisitor;
@@ -39,32 +39,17 @@ import org.fedoraproject.xmvn.utils.ArtifactTypeRegistry;
 class BuildDependencyVisitor
     extends AbstractModelVisitor
 {
-    private static final Set<Artifact> COMMON_PLUGINS = new LinkedHashSet<>();
-    static
-    {
-        // FIXME: don't hardcode this
-
-        // Default lifecycle mappings for packaging "jar"
-        COMMON_PLUGINS.add( new DefaultArtifact( "org.apache.maven.plugins", "maven-resources-plugin" ) );
-        COMMON_PLUGINS.add( new DefaultArtifact( "org.apache.maven.plugins", "maven-compiler-plugin" ) );
-        COMMON_PLUGINS.add( new DefaultArtifact( "org.apache.maven.plugins", "maven-surefire-plugin" ) );
-        COMMON_PLUGINS.add( new DefaultArtifact( "org.apache.maven.plugins", "maven-jar-plugin" ) );
-
-        // Called by XMvn directly
-        COMMON_PLUGINS.add( new DefaultArtifact( "org.apache.maven.plugins", "maven-javadoc-plugin" ) );
-    }
-
-    private static final List<String> BUILD_SCOPES = Arrays.asList( null, "compile", "provided", "test" );
+    private static final List<String> BUILD_SCOPES = Arrays.asList( null, "compile", "provided", "test", "runtime" );
 
     private static final List<String> RUNTIME_SCOPES = Arrays.asList( null, "compile", "runtime" );
 
-    private final String modelId;
+    private final Function<InputLocation, Boolean> isExternalLocation;
 
     private final Set<Artifact> artifacts = new LinkedHashSet<>();
 
-    public BuildDependencyVisitor( String modelId )
+    public BuildDependencyVisitor( Function<InputLocation, Boolean> isExternalLocation )
     {
-        this.modelId = modelId;
+        this.isExternalLocation = isExternalLocation;
     }
 
     public Set<Artifact> getArtifacts()
@@ -72,9 +57,9 @@ class BuildDependencyVisitor
         return Collections.unmodifiableSet( artifacts );
     }
 
-    private boolean isInherited( InputLocation location )
+    private boolean isExternal( InputLocation location )
     {
-        return location == null || !location.getSource().getModelId().equals( modelId );
+        return location == null || isExternalLocation.apply( location );
     }
 
     @Override
@@ -86,7 +71,7 @@ class BuildDependencyVisitor
     @Override
     public void visitDependency( Dependency dependency )
     {
-        if ( isInherited( dependency.getLocation( "" ) ) )
+        if ( isExternal( dependency.getLocation( "" ) ) )
             return;
         if ( !BUILD_SCOPES.contains( dependency.getScope() ) )
             return;
@@ -101,13 +86,14 @@ class BuildDependencyVisitor
     @Override
     public void visitBuildExtension( Extension extension )
     {
-        artifacts.add( new DefaultArtifact( extension.getGroupId(), extension.getArtifactId(), extension.getVersion() ) );
+        artifacts.add( new DefaultArtifact( extension.getGroupId(), extension.getArtifactId(),
+                                            extension.getVersion() ) );
     }
 
     @Override
     public void visitBuildPlugin( Plugin plugin )
     {
-        if ( isInherited( plugin.getLocation( "" ) ) )
+        if ( isExternal( plugin.getLocation( "" ) ) )
             return;
 
         String groupId = plugin.getGroupId();
@@ -119,16 +105,13 @@ class BuildDependencyVisitor
             version = Artifact.DEFAULT_VERSION;
 
         Artifact pluginArtifact = new DefaultArtifact( groupId, artifactId, version );
-        Artifact versionlessPluginArtifact = pluginArtifact.setVersion( Artifact.DEFAULT_VERSION );
-
-        if ( !COMMON_PLUGINS.contains( versionlessPluginArtifact ) )
-            artifacts.add( pluginArtifact );
+        artifacts.add( pluginArtifact );
     }
 
     @Override
     public void visitBuildPluginDependency( Dependency dependency )
     {
-        if ( isInherited( dependency.getLocation( "" ) ) )
+        if ( isExternal( dependency.getLocation( "" ) ) )
             return;
         if ( !RUNTIME_SCOPES.contains( dependency.getScope() ) )
             return;
